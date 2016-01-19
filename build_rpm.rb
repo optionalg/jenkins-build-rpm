@@ -10,6 +10,7 @@ client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
 pull = client.pull_requests(repo, :state => 'open')
 pull.each do |p|
   pullrequesturl = p.html_url.gsub(/api.github.com\/repos/, 'github.com').gsub(/pulls/, 'pull')
+  pullrequestnum = p.number
   head = p.head.ref
   if !head.eql?(branch)
     puts "branch name does not mutch git head"
@@ -17,7 +18,8 @@ pull.each do |p|
   end
 end
 
-ENV['HOME'] = "#{ENV['WORKSPACE']}/#{ENV['BUILD_NUMBER']}"
+#ENV['HOME'] = "#{ENV['WORKSPACE']}/#{ENV['BUILD_NUMBER']}"
+ENV['HOME'] = "#{ENV['WORKSPACE']}/#{pullrequestnum}"
 ENV['JAVA_HOME'] = '/usr/local/java'
 ENV['ANT_HOME'] = '/usr/local/apache-ant-1.7.0'
 ENV['PATH'] = "#{ENV['PATH']}:#{ENV['ANT_HOME']}/bin"
