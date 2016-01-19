@@ -52,7 +52,6 @@ end
 
 FileUtils.mkdir_p("#{ENV['HOME']}") unless FileTest.exist?("#{ENV['HOME']}")
 FileUtils.mkdir_p("#{ENV['HOME']}/.subversion") unless FileTest.exist?("#{ENV['HOME']}/.subversion")
-
 FileUtils.cp_r( svnconf, "#{ENV['HOME']}" , preserve: true )
 
 Open3.popen3("rpmdev-setuptree") do |stdin, stdout, stderr, wait_thr|
