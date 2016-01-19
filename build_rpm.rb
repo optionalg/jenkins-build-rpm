@@ -6,6 +6,11 @@ require 'open3'
 require 'fileutils'
 Bundler.require
 
+repo ='vcjp/packages'
+branch ="#{ENV['GIT_BRANCH']}"
+svnconf='/var/lib/jenkins/workspace/build-vc-packages/.subversion/'
+pullrequesturl = ''
+
 client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
 pull = client.pull_requests(repo, :state => 'open')
 pull.each do |p|
@@ -25,11 +30,6 @@ ENV['ANT_HOME'] = '/usr/local/apache-ant-1.7.0'
 ENV['PATH'] = "#{ENV['PATH']}:#{ENV['ANT_HOME']}/bin"
 ENV['GITHUB_ACCESS_TOKEN'] = ''
 ENV['SLACK_INCOMING_WEBHOOK'] = ''
-
-repo ='vcjp/packages'
-branch ="#{ENV['GIT_BRANCH']}"
-svnconf='/var/lib/jenkins/workspace/build-vc-packages/.subversion/'
-pullrequesturl = ''
 
 if branch.match(/(deploy\/[a-z0-9.]*)\.([0-9a-z]*)\.([0-9a-z]*)$/)[2] then
   environment = branch.match(/(deploy\/[a-z0-9.]*)\.([0-9a-z]*)\.([0-9a-z]*)$/)[2]
