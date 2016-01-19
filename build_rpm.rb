@@ -6,6 +6,17 @@ require 'open3'
 require 'fileutils'
 Bundler.require
 
+client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
+pull = client.pull_requests(repo, :state => 'open')
+pull.each do |p|
+  pullrequesturl = p.html_url.gsub(/api.github.com\/repos/, 'github.com').gsub(/pulls/, 'pull')
+  head = p.head.ref
+  if !head.eql?(branch)
+    puts "branch name does not mutch git head"
+    exit (1)
+  end
+end
+
 ENV['HOME'] = "#{ENV['WORKSPACE']}/#{ENV['BUILD_NUMBER']}"
 ENV['JAVA_HOME'] = '/usr/local/java'
 ENV['ANT_HOME'] = '/usr/local/apache-ant-1.7.0'
@@ -35,19 +46,6 @@ def post(text)
   request_url = ENV['SLACK_INCOMING_WEBHOOK']
   uri = URI.parse(request_url)
   http = Net::HTTP.post_form(uri, {"payload" => data.to_json})
-end
-
-client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
-pull = client.pull_requests(repo, :state => 'open')
-pull.each do |p|
-  pullrequesturl = p.html_url.gsub(/api.github.com\/repos/, 'github.com').gsub(/pulls/, 'pull')
-  head = p.head.ref
-
-  if !head.eql?(branch)
-    puts "branch name does not mutch git head"
-    exit (1)
-  end
-
 end
 
 FileUtils.mkdir_p("#{ENV['HOME']}") unless FileTest.exist?("#{ENV['HOME']}")
