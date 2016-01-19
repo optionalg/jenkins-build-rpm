@@ -17,10 +17,10 @@ pull.each do |p|
   pullrequesturl = p.html_url.gsub(/api.github.com\/repos/, 'github.com').gsub(/pulls/, 'pull')
   pullrequestnum = p.number
   head = p.head.ref
-  if !head.eql?(branch)
-    puts "branch name does not mutch git head"
-    exit (1)
-  end
+    if !head.eql?(branch)
+      puts "branch name does not mutch git head"
+      exit (1)
+    end
 end
 
 #ENV['HOME'] = "#{ENV['WORKSPACE']}/#{ENV['BUILD_NUMBER']}"
