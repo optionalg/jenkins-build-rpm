@@ -77,6 +77,7 @@ files.each do |f|
       puts output
     end
     unless wait_thr.value.success?
+      puts stderr.read
       exit (1)
     end
   end
